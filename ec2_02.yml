@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EC2 with KeyPair, Security Group, and S3 bucket
+
+Resources:
+
+
+  MyEC2InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH, HTTP, and HTTPS access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SecurityGroupIds:
+        - !Ref MyEC2InstanceSecurityGroup
+      ImageId: ami-0ecb62995f68bb549
+      InstanceType: t2.micro
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my.bucket.sarav.com
+      VersioningConfiguration:
+        Status: Enabled
